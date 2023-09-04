@@ -4,13 +4,33 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --verbose",
     "start": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "nodemon": "2.0.4"
+  "dependencies": {
+    "body-parser": "1.19.0",
+    "express": "4.17.1",
+    "mongoose": "5.10.3"
   },
-  "type": "module"
+  "devDependencies": {
+    "nodemon": "2.0.4",
+    "jest": "29.6.2",
+    "@babel/preset-env": "7.22.9"
+  },
+  "type": "module",
+  "jest": {
+    "transform": {
+      "^.+\\.js$": [
+        "babel-jest",
+        {
+          "configFile": "./babel.config.cjs"
+        }
+      ]
+    },
+    "testPathIgnorePatterns": [
+      "/node_modules/"
+    ]
+  }
 }
