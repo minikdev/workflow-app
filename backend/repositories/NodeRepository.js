@@ -7,3 +7,21 @@ export const insert = async ({context, type}) => {
         throw new Error(error)
     }
 }
+
+export const findById = async (id) => {
+    try {
+        return await NodeModel.findById(id)
+    } catch (error) {
+        console.log(error)
+        throw new Error(error)
+    }
+}
+
+export const findByIds = async (ids) => {
+    try {
+        return await NodeModel.find({_id: {$in: ids}})
+    } catch (error) {
+        console.log(error)
+        throw new Error(error)
+    }
+}

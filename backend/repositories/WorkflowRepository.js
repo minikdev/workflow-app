@@ -8,3 +8,11 @@ export const insert = async ({name, startingNodeId}) => {
         throw new Error(error)
     }
 }
+export const findById = async (id) => {
+    try {
+        return await WorkflowModel.findById(id)
+    } catch (error) {
+        console.log(error)
+        throw new Error(error)
+    }
+}
