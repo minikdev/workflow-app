@@ -1,5 +1,5 @@
-import { getLinksAggregated } from "../repositories/LinkRepository.js"
+import { getLinksAggregatedByDestinationNodeId } from "../repositories/LinkRepository.js"
 
-export const getUpstreamLinksWithNodeId = async (nodeId) => {
-    return await getLinksAggregated(nodeId)
+export const getUpstreamLinksByDestinationNodeId = async (nodeId) => {
+    return await getLinksAggregatedByDestinationNodeId(nodeId)
 }

@@ -19,6 +19,7 @@ export const findById = async (id) => {
 
 export const findByIds = async (ids) => {
     try {
+        console.log(ids)
         return await NodeModel.find({_id: {$in: ids}})
     } catch (error) {
         console.log(error)
