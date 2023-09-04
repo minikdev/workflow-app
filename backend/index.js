@@ -3,6 +3,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import { helloRouter } from './routes/HelloRouter.js';
+import { workflowRouter } from './routes/WorkflowRouter.js';
 const app = express();
 
 app.use(bodyParser.json());
@@ -15,6 +16,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/api",helloRouter)
+app.use("/api",workflowRouter)
 
 
 mongoose.connect(

@@ -1,0 +1,1 @@
+export const workflowCreatedResponse = {_id: "someWorkflowId", startingNodeId: "someNodeId", isValid: false, isDeleted:false}
