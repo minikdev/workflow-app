@@ -1,5 +1,5 @@
 import express from "express";
-import { create, extend, getWorkflowWithNodes } from "../services/WorkflowService.js";
+import { create, deleteWorkflow, extend, getWorkflowWithNodes } from "../services/WorkflowService.js";
 export const workflowRouter = express.Router();
 
 workflowRouter.post("/workflows", async (req, res) => {
@@ -30,6 +30,17 @@ workflowRouter.get("/workflows/:id", async (req, res) => {
     try {
         const response = await getWorkflowWithNodes(id)
         res.status(200).send(response);
+    } catch (error) {
+        console.log(error)
+        res.status(404).send(error)
+    }
+})
+
+workflowRouter.delete("/workflows/:id", async (req, res) => {
+    const {id}= req.params;
+    try {
+        const response = await deleteWorkflow(id);
+        res.status(204).send(response);
     } catch (error) {
         console.log(error)
         res.status(404).send(error)

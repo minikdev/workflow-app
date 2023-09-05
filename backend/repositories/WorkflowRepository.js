@@ -10,7 +10,7 @@ export const insert = async ({name, startingNodeId}) => {
 }
 export const findById = async (id) => {
     try {
-        return await WorkflowModel.findById(id)
+        return await WorkflowModel.findOne({_id: id, isDeleted: false})
     } catch (error) {
         console.log(error)
         throw new Error(error)

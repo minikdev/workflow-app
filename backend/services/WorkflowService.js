@@ -74,3 +74,9 @@ export const validateWorkflow = async (workflowId, nodes) => {
     const isValid = initNodes.length === 1 && actionNodes.length >= 1 && conditionNodes.length >= 1 && endNodes.length >= 1
     await update(workflowId, {isValid})
 }
+
+export const deleteWorkflow = async (workflowId) => {
+    const workflow = await findById(workflowId)
+    if(!workflow) throw new Error("Workflow not found")
+    await update(workflowId, {isDeleted: true})
+}
