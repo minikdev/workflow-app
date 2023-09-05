@@ -1,10 +1,11 @@
 import { create, extend } from '../services/WorkflowService.js'
-import { insert as insertNode, findById as findNodeById} from '../repositories/NodeRepository.js'
+import { insert as insertNode, findById as findNodeById, findByIds as findNodesByIds} from '../repositories/NodeRepository.js'
 import { insert, findById } from '../repositories/WorkflowRepository.js'
-import { initNodeFixture } from '../fixtures/NodeFixture.js'
+import { actionNodeFixture, initNodeFixture } from '../fixtures/NodeFixture.js'
 import { workflowCreatedResponse } from '../fixtures/WorkflowFixture.js'
-import { INIT_NODE, NODE_TYPE_ENUM } from '../lib/constants.js'
+import { INIT_NODE } from '../lib/constants.js'
 import {getLinksAggregatedByDestinationNodeId} from '../repositories/LinkRepository.js'
+import { firstLinkFixture } from '../fixtures/LinkFixture.js'
 jest.mock('../repositories/WorkflowRepository.js',() => ({
     insert: jest.fn(),
     findById: jest.fn(),
@@ -12,10 +13,12 @@ jest.mock('../repositories/WorkflowRepository.js',() => ({
 jest.mock('../repositories/NodeRepository.js',() => ({
     insert: jest.fn(),
     findById: jest.fn(),
+    findByIds: jest.fn(),
 }))
 
 jest.mock('../repositories/LinkRepository.js',() => ({
     getLinksAggregatedByDestinationNodeId: jest.fn(),
+    insert: jest.fn(),
     
 }))
 
@@ -72,9 +75,19 @@ describe("Workflow tests", () => {
         }
     })
 
-    // it('should extend workflow with a new node', async () => {
-    //     findById.mockResolvedValue(workflowCreatedResponse)
-    //     const workflow = await extend({workflowId: workflowCreatedResponse._id, nodeId: workflowCreatedResponse.startingNodeId, type: NODE_TYPE_ENUM[1]});
-    //     expect(workflow._id).toEqual(workflowCreatedResponse._id)
-    // })
+    it('should extend workflow with a new node', async () => {
+        const name = "workflow name"
+        findById.mockResolvedValueOnce({...workflowCreatedResponse, name})
+        findNodeById.mockResolvedValueOnce(initNodeFixture)
+        getLinksAggregatedByDestinationNodeId.mockResolvedValueOnce([])
+        insertNode.mockResolvedValueOnce(actionNodeFixture)
+        findById.mockResolvedValueOnce({ _doc: {...workflowCreatedResponse, name},...workflowCreatedResponse, name})
+        findNodeById.mockResolvedValueOnce(initNodeFixture)
+        getLinksAggregatedByDestinationNodeId.mockResolvedValueOnce([firstLinkFixture])
+        findNodesByIds.mockResolvedValueOnce([initNodeFixture,actionNodeFixture])
+        findNodesByIds.mockResolvedValueOnce([initNodeFixture,actionNodeFixture])
+        const response = await extend({ workflowId: workflowCreatedResponse._id, nodeId: initNodeFixture._id, type: actionNodeFixture.type, context: actionNodeFixture.context });
+        expect(response.name).toEqual(name)
+        expect(response.links).toEqual([firstLinkFixture])
+    })
 })
