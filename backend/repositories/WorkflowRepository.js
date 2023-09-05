@@ -16,3 +16,13 @@ export const findById = async (id) => {
         throw new Error(error)
     }
 }
+export const update = async (id, body) => {
+    try {
+        const workflow = await findById(id)
+        if(!workflow) throw new Error("Workflow not found")
+        await workflow.update(body)
+    } catch (error) {
+        console.log(error)
+        throw new Error(error)
+    }
+}

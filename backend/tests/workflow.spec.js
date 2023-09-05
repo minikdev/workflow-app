@@ -9,6 +9,7 @@ import { firstLinkFixture } from '../fixtures/LinkFixture.js'
 jest.mock('../repositories/WorkflowRepository.js',() => ({
     insert: jest.fn(),
     findById: jest.fn(),
+    update: jest.fn(),
 }))
 jest.mock('../repositories/NodeRepository.js',() => ({
     insert: jest.fn(),
@@ -81,7 +82,7 @@ describe("Workflow tests", () => {
         findNodeById.mockResolvedValueOnce(initNodeFixture)
         getLinksAggregatedByDestinationNodeId.mockResolvedValueOnce([])
         insertNode.mockResolvedValueOnce(actionNodeFixture)
-        findById.mockResolvedValueOnce({ _doc: {...workflowCreatedResponse, name},...workflowCreatedResponse, name})
+        findById.mockResolvedValue({ _doc: {...workflowCreatedResponse, name},...workflowCreatedResponse, name})
         findNodeById.mockResolvedValueOnce(initNodeFixture)
         getLinksAggregatedByDestinationNodeId.mockResolvedValueOnce([firstLinkFixture])
         findNodesByIds.mockResolvedValueOnce([initNodeFixture,actionNodeFixture])

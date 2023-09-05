@@ -1,4 +1,4 @@
-import { insert, findById } from '../repositories/WorkflowRepository.js'
+import { insert, findById, update } from '../repositories/WorkflowRepository.js'
 import { insert as insertNode, findById as findNodeById, findByIds as findNodesByIds} from '../repositories/NodeRepository.js'
 import { insert as insertLink } from '../repositories/LinkRepository.js'
 import { INIT_NODE, NODE_TYPE_ENUM } from '../lib/constants.js'
@@ -29,7 +29,9 @@ export const extend = async ({workflowId, nodeId, type, context}) => {
 
     const insertedNode = await insertNode({context, type})
     await insertLink({originNodeId: insertedNode._id, destinationNodeId: destinationNode._id, workflowId: workflow._id})
+    await validateWorkflow(workflow._id, [...nodes, insertedNode])
     const resultWorkflow = await getWorkflowWithNodes(workflowId)
+    
     return resultWorkflow
 }
 
@@ -61,4 +63,14 @@ export const getWorkflowWithNodes = async (workflowId) => {
         links,
         layer
     }
+}
+export const validateWorkflow = async (workflowId, nodes) => {
+    const workflow = await findById(workflowId)
+    if(!workflow) throw new Error("Workflow not found")
+    const initNodes = nodes.filter(n => n.type === NODE_TYPE_ENUM[0])
+    const actionNodes = nodes.filter(n => n.type === NODE_TYPE_ENUM[1])
+    const conditionNodes = nodes.filter(n => n.type === NODE_TYPE_ENUM[2])
+    const endNodes = nodes.filter(n => n.type === NODE_TYPE_ENUM[3])
+    const isValid = initNodes.length === 1 && actionNodes.length >= 1 && conditionNodes.length >= 1 && endNodes.length >= 1
+    await update(workflowId, {isValid})
 }
