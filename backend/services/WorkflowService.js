@@ -17,17 +17,18 @@ export const extend = async ({workflowId, nodeId, type, context}) => {
     if(!destinationNode) throw new Error("Node not found")
 
     if(!NODE_TYPE_ENUM.includes(type) || type === NODE_TYPE_ENUM[0]) throw new Error("Invalid node type") // NODE_TYPE_ENUM[0] is INIT
-    const upstreamLinks = await getUpstreamLinksByDestinationNodeId(workflow.startingNodeId)
+    const upstreamLinks = await getUpstreamLinksByDestinationNodeId(workflow.startingNodeId, workflowId)
     const nodes = await findNodesByIds([...new Set([
         ...upstreamLinks.map(l => l.originNodeId),
         ...upstreamLinks.map(l => l.destinationNodeId),
     ])])
+    
     if (!nodes.find(n => n.id === nodeId) && nodeId !== workflow.startingNodeId) throw new Error("Invalid node id")
     
     if(!context) throw new Error("Context is required")
 
     const insertedNode = await insertNode({context, type})
-    await insertLink({originNodeId: insertedNode._id, destinationNodeId: destinationNode._id})
+    await insertLink({originNodeId: insertedNode._id, destinationNodeId: destinationNode._id, workflowId: workflow._id})
     const resultWorkflow = await getWorkflowWithNodes(workflowId)
     return resultWorkflow
 }
@@ -38,7 +39,7 @@ export const getWorkflowWithNodes = async (workflowId) => {
     const startingNode = await findNodeById(workflow.startingNodeId)
     if(!startingNode) throw new Error("Node not found")
     
-    const links = await getUpstreamLinksByDestinationNodeId(startingNode._id)
+    const links = await getUpstreamLinksByDestinationNodeId(startingNode._id, workflowId)
     const layer = { name: workflow.name, nodes: [startingNode]}
     if(links.length > 0){
         const nodes = await findNodesByIds([...new Set([

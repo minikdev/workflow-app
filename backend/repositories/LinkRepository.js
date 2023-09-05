@@ -1,9 +1,12 @@
 import { LinkModel } from "../models/LinkModel.js";
 
-export const getLinksAggregatedByDestinationNodeId = async (nodeId) => {
+export const getLinksAggregatedByDestinationNodeId = async (nodeId, workflowId)=> {
   try {
-    const initialLinks = await LinkModel.find({destinationNodeId: nodeId})
+    const initialLinks = await LinkModel.find({destinationNodeId: nodeId, workflowId})
     const response = await LinkModel.aggregate([
+      {
+        $match: { "workflowId": workflowId}
+      },
       {
         $graphLookup: {
           from: 'links',
@@ -12,7 +15,7 @@ export const getLinksAggregatedByDestinationNodeId = async (nodeId) => {
           connectToField: 'destinationNodeId',
           as: 'upstreamLinks',
           maxDepth: 100,
-          depthField: 'level'
+          depthField: 'level',
         }
       },
       {
@@ -46,7 +49,6 @@ export const getLinksAggregatedByDestinationNodeId = async (nodeId) => {
         }
       }
     ])
-    
     return [...initialLinks, ...response].sort((a, b) => a.level - b.level)
   } catch (error) {
     console.log(error)
@@ -54,9 +56,9 @@ export const getLinksAggregatedByDestinationNodeId = async (nodeId) => {
   }
 }
 
-export const insert = async ({ originNodeId, destinationNodeId }) => {
+export const insert = async ({ originNodeId, destinationNodeId, workflowId }) => {
   try {
-    return await LinkModel({ originNodeId, destinationNodeId }).save()
+    return await LinkModel({ originNodeId, destinationNodeId, workflowId }).save()
   } catch (error) {
     console.log(error)
     throw new Error(error)
