@@ -20,5 +20,15 @@ services:
     depends_on:
       - mongodb
     container_name: backend
+  frontend:
+    build: ./frontend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./frontend/src:/app/src # bind mount
+    stdin_open: true # -it => input part
+    tty: true # -it => terminal part
+    depends_on:
+      - backend
 volumes: 
   data: 
