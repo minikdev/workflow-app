@@ -50,7 +50,7 @@ export const getWorkflowWithNodes = async (workflowId) => {
             const originNode = nodes.find(n => n.id === link.originNodeId)
             const destinationNode = nodes.find(n => n.id === link.destinationNodeId)
             if(originNode && destinationNode){
-                layer.nodes.push(destinationNode)
+                layer.nodes.push(originNode)
             }
         }
     }
