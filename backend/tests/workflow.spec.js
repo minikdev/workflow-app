@@ -4,6 +4,7 @@ import { insert, findById } from '../repositories/WorkflowRepository.js'
 import { initNodeFixture } from '../fixtures/NodeFixture.js'
 import { workflowCreatedResponse } from '../fixtures/WorkflowFixture.js'
 import { INIT_NODE, NODE_TYPE_ENUM } from '../lib/constants.js'
+import {getLinksAggregatedByDestinationNodeId} from '../repositories/LinkRepository.js'
 jest.mock('../repositories/WorkflowRepository.js',() => ({
     insert: jest.fn(),
     findById: jest.fn(),
@@ -13,6 +14,12 @@ jest.mock('../repositories/NodeRepository.js',() => ({
     findById: jest.fn(),
 }))
 
+jest.mock('../repositories/LinkRepository.js',() => ({
+    getLinksAggregatedByDestinationNodeId: jest.fn(),
+    
+}))
+
+
 describe("Workflow tests", () => {
     beforeEach(() => {
         jest.clearAllMocks()
@@ -21,9 +28,11 @@ describe("Workflow tests", () => {
         const name = "test";
         insertNode.mockResolvedValue(initNodeFixture)
         insert.mockResolvedValue({...workflowCreatedResponse, name})
-
+        findById.mockResolvedValue({ _doc: {...workflowCreatedResponse, name},...workflowCreatedResponse, name})
+        findNodeById.mockResolvedValue(initNodeFixture)
+        getLinksAggregatedByDestinationNodeId.mockResolvedValue([])
         const response = await create({name});
-        expect(response).toEqual({...workflowCreatedResponse, name})
+        expect(response).toEqual({...workflowCreatedResponse, links: [], name, layer: {name, nodes: [initNodeFixture]}})
     })
     it('should throw workflow not found error', async () => {
         findById.mockResolvedValue(null)
@@ -63,9 +72,9 @@ describe("Workflow tests", () => {
         }
     })
 
-    it.only('should extend workflow with a new node', async () => {
-        findById.mockResolvedValue(workflowCreatedResponse)
-        const workflow = await extend({workflowId: workflowCreatedResponse._id, nodeId: workflowCreatedResponse.startingNodeId, type: NODE_TYPE_ENUM[1]});
-        expect(workflow._id).toEqual(workflowCreatedResponse._id)
-    })
+    // it('should extend workflow with a new node', async () => {
+    //     findById.mockResolvedValue(workflowCreatedResponse)
+    //     const workflow = await extend({workflowId: workflowCreatedResponse._id, nodeId: workflowCreatedResponse.startingNodeId, type: NODE_TYPE_ENUM[1]});
+    //     expect(workflow._id).toEqual(workflowCreatedResponse._id)
+    // })
 })

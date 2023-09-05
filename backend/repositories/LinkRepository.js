@@ -5,12 +5,12 @@ export const getLinksAggregatedByDestinationNodeId = async (nodeId) => {
     const response = await LinkModel.aggregate([
       {
         $graphLookup: {
-          from: 'links', // Replace with your actual MongoDB collection name
+          from: 'links', 
           startWith: '$destinationNodeId',
           connectFromField: 'destinationNodeId',
           connectToField: 'originNodeId',
           as: 'connectedNodes',
-          maxDepth: 100, // Adjust the depth as needed
+          maxDepth: 100, 
           restrictSearchWithMatch: {
             destinationNodeId: nodeId
           }

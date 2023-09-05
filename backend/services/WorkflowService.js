@@ -18,7 +18,6 @@ export const extend = async ({workflowId, nodeId, type, context}) => {
 
     if(!NODE_TYPE_ENUM.includes(type) || type === NODE_TYPE_ENUM[0]) throw new Error("Invalid node type") // NODE_TYPE_ENUM[0] is INIT
     const upstreamLinks = await getUpstreamLinksByDestinationNodeId(workflow.startingNodeId)
-    console.log(upstreamLinks,upstreamLinks)
     const nodes = await findNodesByIds([...new Set([
         ...upstreamLinks.map(l => l.originNodeId),
         ...upstreamLinks.map(l => l.destinationNodeId),
