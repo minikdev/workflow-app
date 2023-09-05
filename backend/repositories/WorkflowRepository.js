@@ -16,6 +16,14 @@ export const findById = async (id) => {
         throw new Error(error)
     }
 }
+export const list = async () => {
+    try {
+        return await WorkflowModel.find({isDeleted: false})
+    } catch (error) {
+        console.log(error)
+        throw new Error(error)
+    }
+}
 export const update = async (id, body) => {
     try {
         const workflow = await findById(id)

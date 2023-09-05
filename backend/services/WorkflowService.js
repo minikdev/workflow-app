@@ -1,4 +1,4 @@
-import { insert, findById, update } from '../repositories/WorkflowRepository.js'
+import { insert, findById, update, list } from '../repositories/WorkflowRepository.js'
 import { insert as insertNode, findById as findNodeById, findByIds as findNodesByIds} from '../repositories/NodeRepository.js'
 import { insert as insertLink } from '../repositories/LinkRepository.js'
 import { INIT_NODE, NODE_TYPE_ENUM } from '../lib/constants.js'
@@ -79,4 +79,8 @@ export const deleteWorkflow = async (workflowId) => {
     const workflow = await findById(workflowId)
     if(!workflow) throw new Error("Workflow not found")
     await update(workflowId, {isDeleted: true})
+}
+
+export const listWorkflows = async () => {
+    return await list()
 }
