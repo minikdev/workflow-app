@@ -1,9 +1,16 @@
-import './App.css'
+// 3RD PARTY IMPORTS
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import ReactFlow from 'reactflow';
 
+// COMPONENT IMPORTS
+import { Header } from './components/layouts/Header';
+import { Footer } from './components/layouts/Footer';
+import { Home } from './components/Home/Home';
+
+// STYLES
+import './App.css'
 import 'reactflow/dist/style.css';
+import './index.css'
 
 const client = new QueryClient({
   defaultOptions: {
@@ -13,19 +20,14 @@ const client = new QueryClient({
     },
   },
 })
-const initialNodes = [
-  { id: '1', position: { x: 0, y: 0 }, data: { label: '1' } },
-  { id: '2', position: { x: 0, y: 100 }, data: { label: '2' } },
-];
-const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
 function App() {
   return (
     <QueryClientProvider client={client}>
-      <>
-      <div className='w-96 h-96 bg-slate-500'>
-      <ReactFlow nodes={initialNodes} edges={initialEdges} />
-      </div>
-      </>
+        <div className='flex flex-col justify-between h-screen' >
+          <Header />
+           <Home/>
+          <Footer />
+        </div>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
 

@@ -27,6 +27,7 @@ services:
     volumes:
       - ./frontend/src:/app/src # bind mount
       - ./frontend/index.html:/app/index.html # bind mount
+      - ./frontend/taiwind.config.js:/app/taiwind.config.js # bind mount
     stdin_open: true # -it => input part
     tty: true # -it => terminal part
     depends_on:
