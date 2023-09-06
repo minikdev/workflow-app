@@ -36,7 +36,8 @@ export const useActions = ({selectedWorkflowId}) => {
                 duration: 1000,
                 position: 'bottom-center'
             });
-        }
+        },
+        enabled: !!selectedWorkflowId
     })
     return {
         nodes,

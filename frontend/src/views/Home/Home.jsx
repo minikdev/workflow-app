@@ -5,7 +5,7 @@ export const Home = () => {
     const [selectedWorkflowId, setSelectedWorkflowId] = React.useState(null);
     return (
         <div className='flex flex-col-reverse sm:flex sm:flex-row justify-between items-center h-full w-full'>
-            <WorkflowTable setSelectedWorkflowId={setSelectedWorkflowId}></WorkflowTable>
+            <WorkflowTable setSelectedWorkflowId={setSelectedWorkflowId} selectedWorkflowId={selectedWorkflowId}></WorkflowTable>
             <Workflow selectedWorkflowId={selectedWorkflowId}></Workflow>
         </div>
     )

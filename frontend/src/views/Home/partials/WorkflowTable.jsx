@@ -4,7 +4,7 @@ import { WorkflowsList } from "./WorkflowsList";
 import { createWorkflow, getWorkflows } from "../../../lib/api";
 import toast from 'react-hot-toast';
 import { useQuery } from "@tanstack/react-query";
-export const WorkflowTable = ({setSelectedWorkflowId}) => {
+export const WorkflowTable = ({setSelectedWorkflowId, selectedWorkflowId}) => {
     const [isModalVisible, setIsModalVisible] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(false);
     const [workflows, setWorkflows] = React.useState([]);
@@ -46,7 +46,9 @@ export const WorkflowTable = ({setSelectedWorkflowId}) => {
             isWorkflowsLoading={isWorkflowsLoading} 
             setIsModalVisible={setIsModalVisible} 
             refetch={refetch} 
-            setSelectedWorkflowId={setSelectedWorkflowId}></WorkflowsList>           
+            setSelectedWorkflowId={setSelectedWorkflowId}
+            selectedWorkflowId={selectedWorkflowId}
+            ></WorkflowsList>           
             <CreateWorkflowModal isVisible={isModalVisible}
                 handleClose={() => setIsModalVisible(false)}
                 handleCreate={handleCreate}
