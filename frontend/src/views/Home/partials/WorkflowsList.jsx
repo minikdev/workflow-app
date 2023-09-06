@@ -18,36 +18,38 @@ export const WorkflowsList = ({ setIsModalVisible, isWorkflowsLoading, workflows
             refetch();
         }
     }
-    return <div className="bg-neutral h-full rounded-box overflow-auto p-2 m-1 ">
+
+    return <div className="bg-neutral h-full rounded-box p-2 m-1 overflow-y-auto flex flex-col">
         <div className="flex w-full justify-start ml-2 p-1">
             <button className="btn text-xs" onClick={() => setIsModalVisible(true)}>Create Workflow</button>
         </div>
-        <div>
-            <ul className="  overflow-y-auto flex-nowrap">
-
-                <div className="mt-2">
-
-                    {isWorkflowsLoading ? (
-                        <div>
-                            <span className="loading loading-spinner text-primary loading-xl"></span>
-                        </div>
-                    ) : (
-                        <div className="overflow-y-auto h-full">
-                            {workflows?.map(wf => <WorkflowListItem key={wf._id} workflow={wf} onDeleteWorkflow={handleDeleteWorkflow} ></WorkflowListItem>)}
-                        </div>
-                    )}
-
+        <div className="flex flex-col h-full">
+            {!workflows || workflows.length <= 0 ? <div className=" flex flex-col h-full justify-center">
+                 <p className="text-primary text-md sm:text-2xl md:text-3xl">There is no workflow to show. Please create a workflow.</p>
+            </div> :
+            <ul className="">
+            {isWorkflowsLoading ? (
+                <div>
+                    <span className="loading loading-spinner text-primary loading-xl"></span>
                 </div>
+            ) : (
+                <div className=" h-full">
+                    {workflows?.map(wf => <WorkflowListItem key={wf._id} workflow={wf} onDeleteWorkflow={handleDeleteWorkflow} ></WorkflowListItem>)}
+                </div>
+            )}
 
-            </ul>
+
+             </ul>
+            }
+            
         </div>
     </div>
 
 }
 
 const WorkflowListItem = ({ workflow, onDeleteWorkflow}) => {
-    return <li className='text-primary hover:bg-primary hover:text-neutral'>
-        <div className="flex justify-between p-1 items-center">
+    return <li className='text-primary hover:bg-primary hover:text-neutral '>
+        <div className="flex justify-between p-1 items-center ">
             <a className="truncate text-center p-1 ">{workflow.name}</a>
             <div className="p-1 min-w-fit flex items-center">
                 <div className={`badge mr-1 ${workflow.isValid ? 'badge-success': 'badge-primary '}`}>{workflow.isValid ? 'Valid' : 'Invalid'}</div>
