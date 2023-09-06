@@ -1,7 +1,7 @@
 import React from "react"
 import { deleteWorkflow } from "../../../lib/api"
 import toast from 'react-hot-toast';
-export const WorkflowsList = ({ setIsModalVisible, isWorkflowsLoading, workflows, refetch }) => {
+export const WorkflowsList = ({ setIsModalVisible, isWorkflowsLoading, workflows, refetch, setSelectedWorkflowId }) => {
     const handleDeleteWorkflow = async (workflowId) => {
         try {
             await deleteWorkflow(workflowId);
@@ -34,7 +34,12 @@ export const WorkflowsList = ({ setIsModalVisible, isWorkflowsLoading, workflows
                 </div>
             ) : (
                 <div className=" h-full">
-                    {workflows?.map(wf => <WorkflowListItem key={wf._id} workflow={wf} onDeleteWorkflow={handleDeleteWorkflow} ></WorkflowListItem>)}
+                    {workflows?.map(wf => <WorkflowListItem 
+                    key={wf._id} 
+                    workflow={wf} 
+                    onDeleteWorkflow={handleDeleteWorkflow} 
+                    setSelectedWorkflowId={setSelectedWorkflowId}
+                    ></WorkflowListItem>)}
                 </div>
             )}
 
@@ -47,8 +52,8 @@ export const WorkflowsList = ({ setIsModalVisible, isWorkflowsLoading, workflows
 
 }
 
-const WorkflowListItem = ({ workflow, onDeleteWorkflow}) => {
-    return <li className='text-primary hover:bg-primary hover:text-neutral '>
+const WorkflowListItem = ({ workflow, onDeleteWorkflow, setSelectedWorkflowId}) => {
+    return <li className='text-primary hover:bg-primary hover:text-neutral' onClick={()=> setSelectedWorkflowId(workflow._id)}>
         <div className="flex justify-between p-1 items-center ">
             <a className="truncate text-center p-1 ">{workflow.name}</a>
             <div className="p-1 min-w-fit flex items-center">

@@ -24,3 +24,11 @@ export const deleteWorkflow = async (id) => {
     });
 
 }
+export const getWorkflow = async (id) => {
+    return await axiosFetch({
+        method: "GET",
+        endpoint: `workflows/${id}`,
+        
+    });
+
+}
