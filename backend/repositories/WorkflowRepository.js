@@ -2,7 +2,9 @@ import { WorkflowModel } from "../models/WorkflowModel.js"
 
 export const insert = async ({name, startingNodeId}) => {
     try {
-        return await WorkflowModel({name, startingNodeId}).save()
+        const workflowWithTheSameName = await WorkflowModel.findOne({name: name.trim(), isDeleted: false})
+        if(workflowWithTheSameName) throw new Error("Workflow with the same name already exists")
+        return await WorkflowModel({name: name.trim(), startingNodeId}).save()
     } catch (error) {
         console.log(error)
         throw new Error(error)

@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 const workflowSchema = new mongoose.Schema({
     name: {
         type: String,
-        unique: true
+        // unique: true => we have soft delete with isDeleted field so we can't use unique
     },
     startingNodeId: String,
     isValid: {
