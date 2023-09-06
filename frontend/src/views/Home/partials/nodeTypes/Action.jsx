@@ -1,15 +1,11 @@
-import { useCallback } from 'react';
 import { Handle, Position } from 'reactflow';
 
 
 export const ActionNode = ({ data }) => {
-  const onChange = useCallback((evt) => {
-    console.log(evt.target.value);
-  }, []);
 
   return (
     <>
-      <Handle type="target" position={Position.Top} id="a" />
+      <Handle type="target" position={Position.Top} id={`${data.id}-a-target`} />
       <div className="tooltip hover:tooltip-open tooltip-left" data-tip={data.label}>
 
         <div className="flex flex-col items-center">
@@ -19,7 +15,7 @@ export const ActionNode = ({ data }) => {
         </div>
       </div>
 
-      <Handle type="source" position={Position.Bottom} id="b" />
+      <Handle type="source" position={Position.Bottom} id={`${data.id}-b-source`} />
     </>
   );
 }

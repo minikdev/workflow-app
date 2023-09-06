@@ -1,12 +1,7 @@
-import { useCallback } from 'react';
 import { Handle, Position } from 'reactflow';
 
-const handleStyle = { left: 10 };
 
 export const EndNode = ({ data })  => {
-  const onChange = useCallback((evt) => {
-    console.log(evt.target.value);
-  }, []);
 
   return (
     <>
@@ -17,7 +12,7 @@ export const EndNode = ({ data })  => {
       </div>
     </div>
         </div>
-      <Handle type="target" position={Position.Top} id="a" />
+      <Handle type="target" position={Position.Top} id={`${data.id}-a-target`} />
     </>
   );
 }

@@ -1,12 +1,7 @@
-import { useCallback } from 'react';
 import { Handle, Position } from 'reactflow';
 
 
 export const InitNode = ({ data })  => {
-  const onChange = useCallback((evt) => {
-    console.log(evt.target.value);
-  }, []);
-
   return (
     <>
         <div className="tooltip hover:tooltip-open tooltip-left" data-tip={data.label}>
@@ -17,7 +12,9 @@ export const InitNode = ({ data })  => {
       </div>
     </div>
         </div>
-      <Handle type="source" position={Position.Bottom} id="a" />
+      <Handle type="source" position={Position.Bottom} id={`${data.id}-a-source`} onClick={(e,data) => {
+        console.log(e,data)
+      }} />
     </>
   );
 }

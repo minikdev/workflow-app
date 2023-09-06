@@ -26,11 +26,10 @@ export const useActions = ({ selectedWorkflowId }) => {
         setNodes(layerNodes.map((node, index) => ({
             id: node._id,
             position: { x: 0, y: index * 170 },
-            data: { label: node.context },
+            data: { label: node.context, id: node._id },
             type: node.type,
            
         })))
-
         setEdges(links.map((link) => ({
             id: link._id,
             source: link.destinationNodeId,
@@ -38,8 +37,8 @@ export const useActions = ({ selectedWorkflowId }) => {
             animated: true,
             style: { stroke: '#fff' },
             data: { edgeType: 'bezier', link },
-            sourceHandle: `${link.destinationTracingNodeId}-c-source`,
-            targetHandle: `${link.originTracingNodeId}-b-source`,
+            sourceHandle: `${link.destinationNodeId}-c-source`,
+            targetHandle: `${link.originNodeId}-b-source`,
             zIndex: 1,
             markerEnd: {
                 type: MarkerType.Arrow,
@@ -48,6 +47,7 @@ export const useActions = ({ selectedWorkflowId }) => {
                 color: '#000',
             },
         })))
+        console.log(edges);
     }, [workflow])
 
     useQuery(['workflow', selectedWorkflowId], () => getWorkflow(selectedWorkflowId), {
