@@ -30,6 +30,8 @@ services:
       - ./frontend/tailwind.config.js:/app/tailwind.config.js # bind mount
     stdin_open: true # -it => input part
     tty: true # -it => terminal part
+    env_file:
+      - ./frontend/.env
     depends_on:
       - backend
 volumes: 

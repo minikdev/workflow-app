@@ -5,7 +5,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 // COMPONENT IMPORTS
 import { Header } from './components/layouts/Header';
 import { Footer } from './components/layouts/Footer';
-import { Home } from './components/Home/Home';
+import { Home } from './views/Home/Home';
 
 // STYLES
 import './App.css'
