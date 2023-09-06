@@ -7,7 +7,7 @@ const initialNodes = [
 const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
 export const Workflow = () => {
     return <div className=' bg-neutral h-5/6 w-5/6 mt-2 sm:w-2/3 sm:h-5/6 sm:mr-1 rounded-3xl' >
-        <ReactFlow nodes={initialNodes} edges={initialEdges} />
+        <ReactFlow nodes={initialNodes} edges={initialEdges} className="rounded-3xl"/>
     </div>
 
 }

@@ -1,7 +1,7 @@
 // 3RD PARTY IMPORTS
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-
+import { Toaster } from 'react-hot-toast';
 // COMPONENT IMPORTS
 import { Header } from './components/layouts/Header';
 import { Footer } from './components/layouts/Footer';
@@ -28,6 +28,7 @@ function App() {
            <Home/>
           <Footer />
         </div>
+        <Toaster />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
 

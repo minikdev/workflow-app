@@ -1,12 +1,26 @@
 
-import { axios } from "./axios";
+import { axiosFetch } from "./axios";
 
 export const createWorkflow = async (name) => {
-    const { data } = await axios({
+    return await axiosFetch({
         method: "POST",
         endpoint: "workflows",
         body: { name },
     });
-    debugger
-    return data;
+}
+export const getWorkflows = async () => {
+    return await axiosFetch({
+        method: "GET",
+        endpoint: "workflows",
+        
+    });
+
+}
+export const deleteWorkflow = async (id) => {
+    return await axiosFetch({
+        method: "DELETE",
+        endpoint: `workflows/${id}`,
+        
+    });
+
 }

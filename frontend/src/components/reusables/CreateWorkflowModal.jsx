@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-export const CreateWorkflowModal = ({ isVisible, handleCreate, handleClose }) => {
+export const CreateWorkflowModal = ({ isVisible, handleCreate, handleClose, isLoading }) => {
     const modalContainer = document.getElementById('modal-root');
     const [workflowName, setWorkflowName] = useState('');
     const [isNameValid, setIsNameValid] = useState(true); 
@@ -10,7 +10,6 @@ export const CreateWorkflowModal = ({ isVisible, handleCreate, handleClose }) =>
             handleCreate(workflowName);
             setWorkflowName('');
             setIsNameValid(true);
-            handleClose();
         }
     };
     const handleCloseClick = () => {
@@ -53,7 +52,7 @@ export const CreateWorkflowModal = ({ isVisible, handleCreate, handleClose }) =>
                             className="btn btn-neutral text-xs mr-2"
                             onClick={handleCreateClick}
                         >
-                            Create
+                            {isLoading ? (<span className="loading loading-spinner text-primary"></span>) : 'Create'}
                         </button>
                         <button
                             className="btn btn-error text-xs "
