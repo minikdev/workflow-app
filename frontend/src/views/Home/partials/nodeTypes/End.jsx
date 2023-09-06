@@ -2,7 +2,7 @@ import { Handle, Position } from 'reactflow';
 
 
 export const EndNode = ({ data })  => {
-
+  
   return (
     <>
         <div className="tooltip hover:tooltip-open tooltip-left" data-tip={data.label}>

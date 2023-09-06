@@ -19,6 +19,7 @@ export const useActions = ({ selectedWorkflowId }) => {
     const [workflow, setWorkflow] = React.useState(null);
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+    const [extendWorkflowModalState, setExtendWorkflowModalState] = React.useState({isVisible: false, isLoading: false});
     useEffect(() => {
         if (!workflow) return;
         const { layer, links } = workflow;
@@ -26,7 +27,7 @@ export const useActions = ({ selectedWorkflowId }) => {
         setNodes(layerNodes.map((node, index) => ({
             id: node._id,
             position: { x: 0, y: index * 170 },
-            data: { label: node.context, id: node._id },
+            data: { label: node.context, id: node._id, links: edges, setExtendWorkflowModalState },
             type: node.type,
            
         })))
@@ -37,8 +38,8 @@ export const useActions = ({ selectedWorkflowId }) => {
             animated: true,
             style: { stroke: '#fff' },
             data: { edgeType: 'bezier', link },
-            sourceHandle: `${link.destinationNodeId}-c-source`,
-            targetHandle: `${link.originNodeId}-b-source`,
+            sourceHandle: links.some(l => l.destinationNodeId === link.destinationNodeId && l._id !== link._id) ? `${link.destinationNodeId}-a-source` : `${link.destinationNodeId}-b-source`,
+            targetHandle: `${link.originNodeId}-a-target`,
             zIndex: 1,
             markerEnd: {
                 type: MarkerType.Arrow,
@@ -47,7 +48,6 @@ export const useActions = ({ selectedWorkflowId }) => {
                 color: '#000',
             },
         })))
-        console.log(edges);
     }, [workflow])
 
     useQuery(['workflow', selectedWorkflowId], () => getWorkflow(selectedWorkflowId), {
@@ -63,12 +63,21 @@ export const useActions = ({ selectedWorkflowId }) => {
         },
         enabled: !!selectedWorkflowId
     })
+    const handleExtend = () => {
+
+    }
+    const handleClose = () => {
+        setExtendWorkflowModalState({isVisible: false, isLoading: false})
+    }
     return {
         nodes,
         edges,
         onNodesChange,
         onEdgesChange,
-        nodeTypes
+        nodeTypes,
+        extendWorkflowModalState,
+        handleClose,
+        handleExtend
     }
 
 }
