@@ -25,33 +25,60 @@ export const useActions = ({ selectedWorkflowId, refetchWorkflows }) => {
         if (!workflow) return;
         const { layer, links } = workflow;
         const { nodes: layerNodes } = layer
-        setNodes(layerNodes.map((node, index) => ({
-            id: node._id,
-            position: { x: 0, y: index * 170 },
-            data: { label: node.context, id: node._id, links: mapEdges(links), setExtendWorkflowModalState },
-            type: node.type,
-           
-        })))
+        setNodes(mapNodes(layerNodes,links))
         setEdges(mapEdges(links))
     }, [workflow])
+
+    const mapNodes = (nodes, links) => {
+        return nodes.reduce((acc, node, index) => {
+            acc.push({
+                id: node._id,
+                position: decideOnNodePosition(acc,node, index, mapEdges(links)),
+                data: { label: node.context, id: node._id, links: mapEdges(links), setExtendWorkflowModalState },
+                type: node.type,
+            })
+            return acc
+        },[])
+    }
+    const decideOnNodePosition = (acc,node, index, edges) => {
+        if(index === 0) return { x: 0, y: 0 }
+
+        const sourceNode = acc.find(accNode => accNode.id === edges.find(edge => edge.target === node._id)?.source)
+        if(sourceNode.type !== 'CONDITION') return {x:sourceNode.position.x, y: sourceNode.position.y + 170}
+
+        if(isFirstNodeConnectedToCondition(acc,sourceNode,edges)) return {x:sourceNode.position.x + 150, y: sourceNode.position.y + 170}
+        if(!isFirstNodeConnectedToCondition(acc,sourceNode,edges)) return {x:sourceNode.position.x - 150, y: sourceNode.position.y + 170}
+
+        return {x:sourceNode.position.x , y: sourceNode.position.y + 170}
+        
+    }
+    const isFirstNodeConnectedToCondition = (acc,sourceNode,edges) => {
+        return acc.some(accNode => accNode.id === edges.find(edge => edge.source === sourceNode.id)?.target)
+    }
     const mapEdges = (links) => {
-        return links.map((link) => ({
-            id: link._id,
-            source: link.destinationNodeId,
-            target: link.originNodeId,
-            animated: true,
-            style: { stroke: '#fff' },
-            data: { edgeType: 'bezier', link },
-            sourceHandle: links.some(l => l.destinationNodeId === link.destinationNodeId && l._id !== link._id) ? `${link.destinationNodeId}-a-source` : `${link.destinationNodeId}-b-source`,
-            targetHandle: `${link.originNodeId}-a-target`,
-            zIndex: 1,
-            markerEnd: {
-                type: MarkerType.Arrow,
-                width: 20,
-                height: 20,
-                color: '#000',
-            },
-        }))
+        return links.reduce((acc,link) => {
+            acc.push({
+                id: link._id,
+                source: link.destinationNodeId,
+                target: link.originNodeId,
+                animated: true,
+                style: { stroke: '#fff' },
+                data: { edgeType: 'bezier', link },
+                sourceHandle: decideOnSourceHandle(acc,link),
+                targetHandle: `${link.originNodeId}-a-target`,
+                zIndex: 1,
+                markerEnd: {
+                    type: MarkerType.Arrow,
+                    width: 20,
+                    height: 20,
+                    color: '#000',
+                },
+            })
+            return acc
+        },[])
+    }
+    const decideOnSourceHandle = (acc,link) => {
+       return acc.some(edge => edge.sourceHandle === `${link.destinationNodeId}-a-source` ) ? `${link.destinationNodeId}-b-source` : `${link.destinationNodeId}-a-source`
     }
     const {refetch:refetchWorkflow}= useQuery(['workflow', selectedWorkflowId], () => getWorkflow(selectedWorkflowId), {
         onSuccess: (response) => {

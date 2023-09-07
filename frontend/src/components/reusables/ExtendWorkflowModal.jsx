@@ -53,7 +53,7 @@ export const ExtendWorkflowModal = ({ handleExtend, handleClose, isLoading, exte
                 </div>
                 <div >
                     <select className="select w-full bg-white" onChange={onSelectChange} defaultValue={type}>
-                        <option selected>{NODE_TYPES_ENUM[1]}</option>
+                        <option >{NODE_TYPES_ENUM[1]}</option>
                         { NODE_TYPES_ENUM.slice(2).map((nodeType) => <option key={nodeType}>{nodeType}</option>)}
                     </select>
                    
