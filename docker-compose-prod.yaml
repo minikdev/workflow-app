@@ -1,5 +1,18 @@
 version: "3.8"
 services:
+  webserver:
+    image: nginx:mainline-alpine
+    container_name: webserver
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - web-root:/var/www/html
+      - ./nginx-conf:/etc/nginx/conf.d
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+    depends_on:
+      - backend
   mongodb:
     image: "mongo"
     volumes:
@@ -8,10 +21,12 @@ services:
       - ./mongo.env
     ports:
       - "27017:27017"
+  
   backend:
     build: ./backend
     ports:
-      - "3100:3100"
+      - "80:8080"
+      - "443:443"
     volumes:
       - ./backend:/app 
       - /app/node_modules
@@ -20,5 +35,25 @@ services:
     depends_on:
       - mongodb
     container_name: backend
-volumes: 
-  data: 
+  
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - web-root:/var/www/html
+    depends_on:
+      - webserver
+    command: certonly --webroot --webroot-path=/var/www/html --email enginkaan6@gmail.com --agree-tos --no-eff-email --staging -d workflowapp.online  -d www.workflowapp.online
+   
+volumes:
+  data:
+  certbot-etc:
+  certbot-var:
+  web-root:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/apps/workflow-app/
+      o: bind  
