@@ -30,5 +30,12 @@ export const getWorkflow = async (id) => {
         endpoint: `workflows/${id}`,
         
     });
+}
 
+export const extendWorkflow = async (workflowId,{nodeId, context, type}) => {
+    return await axiosFetch({
+        method: "POST",
+        endpoint: `workflows/${workflowId}/extend`,
+        body: { nodeId, context, type },
+    });
 }

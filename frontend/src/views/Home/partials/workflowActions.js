@@ -6,7 +6,7 @@ import {
     MarkerType
 } from 'reactflow';
 import { useQuery } from "@tanstack/react-query";
-import { getWorkflow } from "../../../lib/api";
+import { extendWorkflow, getWorkflow } from "../../../lib/api";
 import toast from 'react-hot-toast';
 import { InitNode } from "./nodeTypes/Init";
 import { EndNode } from "./nodeTypes/End";
@@ -19,7 +19,8 @@ export const useActions = ({ selectedWorkflowId }) => {
     const [workflow, setWorkflow] = React.useState(null);
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-    const [extendWorkflowModalState, setExtendWorkflowModalState] = React.useState({isVisible: false, isLoading: false});
+    const [extendWorkflowModalState, setExtendWorkflowModalState] = React.useState({isVisible: false, nodeId: null});
+    const [isLoading, setIsLoading] = React.useState(false);
     useEffect(() => {
         if (!workflow) return;
         const { layer, links } = workflow;
@@ -27,11 +28,14 @@ export const useActions = ({ selectedWorkflowId }) => {
         setNodes(layerNodes.map((node, index) => ({
             id: node._id,
             position: { x: 0, y: index * 170 },
-            data: { label: node.context, id: node._id, links: edges, setExtendWorkflowModalState },
+            data: { label: node.context, id: node._id, links: mapEdges(links), setExtendWorkflowModalState },
             type: node.type,
            
         })))
-        setEdges(links.map((link) => ({
+        setEdges(mapEdges(links))
+    }, [workflow])
+    const mapEdges = (links) => {
+        return links.map((link) => ({
             id: link._id,
             source: link.destinationNodeId,
             target: link.originNodeId,
@@ -47,10 +51,9 @@ export const useActions = ({ selectedWorkflowId }) => {
                 height: 20,
                 color: '#000',
             },
-        })))
-    }, [workflow])
-
-    useQuery(['workflow', selectedWorkflowId], () => getWorkflow(selectedWorkflowId), {
+        }))
+    }
+    const {refetch:refetchWorkflow}= useQuery(['workflow', selectedWorkflowId], () => getWorkflow(selectedWorkflowId), {
         onSuccess: (response) => {
             const { data } = response;
             setWorkflow(data);
@@ -63,11 +66,29 @@ export const useActions = ({ selectedWorkflowId }) => {
         },
         enabled: !!selectedWorkflowId
     })
-    const handleExtend = () => {
-
+    const handleExtend = async ({context, type, nodeId}) => {
+        try {
+            setIsLoading(true);
+            await extendWorkflow(workflow?._id,{ nodeId, context, type})
+            toast.success('Workflow extended successfully', {
+                duration: 1000,
+                position: 'bottom-center'
+            })
+            refetchWorkflow();
+        } catch (error) {
+            console.error(error);
+            toast.error('Something went wrong', {
+                duration: 1000,
+                position: 'bottom-center'
+            })
+        }finally{
+            setIsLoading(false);
+            setExtendWorkflowModalState({isVisible: false, nodeId: null})
+        }
     }
     const handleClose = () => {
-        setExtendWorkflowModalState({isVisible: false, isLoading: false})
+        setExtendWorkflowModalState({isVisible: false, nodeId: null})
+        setIsLoading(false);
     }
     return {
         nodes,
@@ -77,7 +98,9 @@ export const useActions = ({ selectedWorkflowId }) => {
         nodeTypes,
         extendWorkflowModalState,
         handleClose,
-        handleExtend
+        handleExtend,
+        isLoading,
+        setIsLoading
     }
 
 }

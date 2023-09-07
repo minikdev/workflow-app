@@ -5,6 +5,7 @@ export const WorkflowsList = ({ setIsModalVisible, isWorkflowsLoading, workflows
     const handleDeleteWorkflow = async (workflowId) => {
         try {
             await deleteWorkflow(workflowId);
+            setSelectedWorkflowId("");
             toast.success('Workflow deleted successfully', {
                 duration: 1000,
                 position: 'bottom-center'

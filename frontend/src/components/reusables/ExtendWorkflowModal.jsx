@@ -2,14 +2,14 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { NODE_TYPES_ENUM } from '../../lib/constants';
-export const ExtendWorkflowModal = ({ isVisible, handleExtend, handleClose, isLoading }) => {
+export const ExtendWorkflowModal = ({ handleExtend, handleClose, isLoading, extendWorkflowModalState }) => {
     const modalContainer = document.getElementById('modal-root');
     const [context, setContext] = useState('');
-    const [type, setType] = useState('');
+    const [type, setType] = useState(NODE_TYPES_ENUM[1]);
     const [isContextValid, setIsContextValid] = useState(true);
     const handleExtendClick = () => {
         if (isContextValid) {
-            handleExtend({ context, type });
+            handleExtend({ context, type, nodeId: extendWorkflowModalState?.nodeId });
             setContext('');
             setIsContextValid(true);
         }
@@ -17,6 +17,7 @@ export const ExtendWorkflowModal = ({ isVisible, handleExtend, handleClose, isLo
     const handleCloseClick = () => {
         setContext('');
         setIsContextValid(true);
+        setType(NODE_TYPES_ENUM[1]);
         handleClose();
     }
     const onInputChange = (e) => {
@@ -31,7 +32,7 @@ export const ExtendWorkflowModal = ({ isVisible, handleExtend, handleClose, isLo
         setType(e.target.value)
     }
 
-    if (!isVisible) return null;
+    if (!extendWorkflowModalState?.isVisible) return null;
 
     return ReactDOM.createPortal(
         <div className="fixed inset-0 flex items-center justify-center z-50">
@@ -51,7 +52,7 @@ export const ExtendWorkflowModal = ({ isVisible, handleExtend, handleClose, isLo
                     )}
                 </div>
                 <div >
-                    <select className="select w-full bg-white">
+                    <select className="select w-full bg-white" onChange={onSelectChange} defaultValue={type}>
                         <option selected>{NODE_TYPES_ENUM[1]}</option>
                         { NODE_TYPES_ENUM.slice(2).map((nodeType) => <option key={nodeType}>{nodeType}</option>)}
                     </select>

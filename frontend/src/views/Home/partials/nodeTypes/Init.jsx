@@ -3,7 +3,8 @@ import { handleStyle } from './style';
 
 
 export const InitNode = ({ data }) => {
-    const isExtendible = !data?.links?.some(link => link.destinationNodeId === data.id)
+    const isExtendible = !data?.links?.some(link => link.source === data.id)
+    
     const {setExtendWorkflowModalState} = data;
     return (
         <>
@@ -16,9 +17,9 @@ export const InitNode = ({ data }) => {
                 </div>
             </div>
             <Handle type="source" position={Position.Bottom} id={`${data.id}-a-source`}
-                onClick={(e, data) => {
+                onClick={(e) => {
                     if(!isExtendible)return;
-                    setExtendWorkflowModalState({isLoading:false, isVisible:true});
+                    setExtendWorkflowModalState({isLoading:false, isVisible:true, nodeId:data.id});
                 }}
                 style={handleStyle}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
