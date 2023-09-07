@@ -8,8 +8,8 @@ import ReactFlow, {
 import { useActions} from './workflowActions'
 import { ExtendWorkflowModal } from "../../../components/reusables/ExtendWorkflowModal";
 
-export const Workflow = ({selectedWorkflowId}) => {
-    const {nodes,edges,onNodesChange,onEdgesChange, nodeTypes, extendWorkflowModalState, handleClose, handleExtend,isLoading} = useActions({selectedWorkflowId});
+export const Workflow = ({selectedWorkflowId, refetchWorkflows}) => {
+    const {nodes,edges,onNodesChange,onEdgesChange, nodeTypes, extendWorkflowModalState, handleClose, handleExtend,isLoading} = useActions({selectedWorkflowId, refetchWorkflows});
     return <div className=' bg-neutral h-5/6 w-5/6 mt-2 sm:w-2/3 sm:h-5/6 sm:mr-1 rounded-3xl' >
       <ReactFlowProvider>
 

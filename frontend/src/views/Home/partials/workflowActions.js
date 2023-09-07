@@ -6,7 +6,7 @@ import {
     MarkerType
 } from 'reactflow';
 import { useQuery } from "@tanstack/react-query";
-import { extendWorkflow, getWorkflow } from "../../../lib/api";
+import { extendWorkflow, getWorkflow, getWorkflows } from "../../../lib/api";
 import toast from 'react-hot-toast';
 import { InitNode } from "./nodeTypes/Init";
 import { EndNode } from "./nodeTypes/End";
@@ -14,7 +14,7 @@ import { ActionNode } from "./nodeTypes/Action";
 import { ConditionNode } from "./nodeTypes/Condition";
 
 
-export const useActions = ({ selectedWorkflowId }) => {
+export const useActions = ({ selectedWorkflowId, refetchWorkflows }) => {
     const nodeTypes = useMemo(() => ({ INIT: InitNode, END: EndNode, ACTION: ActionNode, CONDITION: ConditionNode }), []);
     const [workflow, setWorkflow] = React.useState(null);
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -66,6 +66,7 @@ export const useActions = ({ selectedWorkflowId }) => {
         },
         enabled: !!selectedWorkflowId
     })
+    
     const handleExtend = async ({context, type, nodeId}) => {
         try {
             setIsLoading(true);
@@ -75,6 +76,7 @@ export const useActions = ({ selectedWorkflowId }) => {
                 position: 'bottom-center'
             })
             refetchWorkflow();
+            refetchWorkflows()
         } catch (error) {
             console.error(error);
             toast.error('Something went wrong', {
