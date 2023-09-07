@@ -25,3 +25,13 @@ export const findByIds = async (ids) => {
         throw new Error(error)
     }
 }
+export const update = async ({id,context,type}) => {
+    try {
+        const node = await findById(id)
+        if(!node) throw new Error("Node not found")
+        await node.update({context, type})
+    } catch (error) {
+        console.log(error)
+        throw new Error(error)
+    }
+}

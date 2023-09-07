@@ -39,3 +39,11 @@ export const extendWorkflow = async (workflowId,{nodeId, context, type}) => {
         body: { nodeId, context, type },
     });
 }
+export const editNode = async ({nodeId, context, type}) => {
+    console.log(nodeId,"amkamk");
+    return await axiosFetch({
+        method: "PUT",
+        endpoint: `nodes/${nodeId}`,
+        body: {context, type },
+    });
+}

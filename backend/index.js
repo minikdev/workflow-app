@@ -4,19 +4,21 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import { helloRouter } from './routes/HelloRouter.js';
 import { workflowRouter } from './routes/WorkflowRouter.js';
+import { nodeRouter } from './routes/NodeRouter.js';
 const app = express();
 
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS, PUT');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   next();
 });
 
 app.use("/api",helloRouter)
 app.use("/api",workflowRouter)
+app.use("/api",nodeRouter)
 
 
 mongoose.connect(

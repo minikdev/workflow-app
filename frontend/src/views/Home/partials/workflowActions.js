@@ -2,11 +2,10 @@ import React, { useEffect, useMemo } from "react"
 import {
     useNodesState,
     useEdgesState,
-    addEdge,
     MarkerType
 } from 'reactflow';
 import { useQuery } from "@tanstack/react-query";
-import { extendWorkflow, getWorkflow, getWorkflows } from "../../../lib/api";
+import { extendWorkflow, getWorkflow, editNode } from "../../../lib/api";
 import toast from 'react-hot-toast';
 import { InitNode } from "./nodeTypes/Init";
 import { EndNode } from "./nodeTypes/End";
@@ -20,6 +19,7 @@ export const useActions = ({ selectedWorkflowId, refetchWorkflows }) => {
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const [extendWorkflowModalState, setExtendWorkflowModalState] = React.useState({isVisible: false, nodeId: null});
+    const [editNodeModalState, setEditNodeModalState] = React.useState({isVisible: false, nodeId: null});
     const [isLoading, setIsLoading] = React.useState(false);
     useEffect(() => {
         if (!workflow) return;
@@ -34,7 +34,7 @@ export const useActions = ({ selectedWorkflowId, refetchWorkflows }) => {
             acc.push({
                 id: node._id,
                 position: decideOnNodePosition(acc,node, index, mapEdges(links)),
-                data: { label: node.context, id: node._id, links: mapEdges(links), setExtendWorkflowModalState },
+                data: { label: node.context, id: node._id, links: mapEdges(links), setExtendWorkflowModalState, setEditNodeModalState, type: node.type, node },
                 type: node.type,
             })
             return acc
@@ -115,8 +115,33 @@ export const useActions = ({ selectedWorkflowId, refetchWorkflows }) => {
             setExtendWorkflowModalState({isVisible: false, nodeId: null})
         }
     }
+    const handleEditNode = async ({context, type, nodeId}) => {
+        try {
+            setIsLoading(true);
+            await editNode({ nodeId, context, type})
+            toast.success('Node edited successfully', {
+                duration: 1000,
+                position: 'bottom-center'
+            })
+            refetchWorkflow();
+            refetchWorkflows()
+        } catch (error) {
+            console.error(error);
+            toast.error('Something went wrong', {
+                duration: 1000,
+                position: 'bottom-center'
+            })
+        }finally{
+            setIsLoading(false);
+            setEditNodeModalState({isVisible: false, nodeId: null})
+        }
+    }
     const handleClose = () => {
         setExtendWorkflowModalState({isVisible: false, nodeId: null})
+        setIsLoading(false);
+    }
+    const handleCloseEditNodeModal = () => {
+        setEditNodeModalState({isVisible: false, nodeId: null})
         setIsLoading(false);
     }
     return {
@@ -129,7 +154,11 @@ export const useActions = ({ selectedWorkflowId, refetchWorkflows }) => {
         handleClose,
         handleExtend,
         isLoading,
-        setIsLoading
+        setIsLoading,
+        editNodeModalState, 
+        setEditNodeModalState,
+        handleCloseEditNodeModal,
+        handleEditNode
     }
 
 }

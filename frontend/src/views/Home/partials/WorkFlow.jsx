@@ -7,9 +7,22 @@ import ReactFlow, {
 } from 'reactflow';
 import { useActions} from './workflowActions'
 import { ExtendWorkflowModal } from "../../../components/reusables/ExtendWorkflowModal";
+import { EditNodeModal } from "../../../components/reusables/EditNodeModal";
 
 export const Workflow = ({selectedWorkflowId, refetchWorkflows}) => {
-    const {nodes,edges,onNodesChange,onEdgesChange, nodeTypes, extendWorkflowModalState, handleClose, handleExtend,isLoading} = useActions({selectedWorkflowId, refetchWorkflows});
+  const { 
+    nodes, 
+    edges, 
+    onNodesChange, 
+    onEdgesChange, 
+    nodeTypes, 
+    extendWorkflowModalState, 
+    handleClose, 
+    handleExtend, 
+    isLoading,
+    editNodeModalState,
+    handleCloseEditNodeModal,
+    handleEditNode } = useActions({ selectedWorkflowId, refetchWorkflows });
     return <div className=' bg-neutral h-5/6 w-5/6 mt-2 sm:w-2/3 sm:h-5/6 sm:mr-1 rounded-3xl' >
       <ReactFlowProvider>
 
@@ -32,6 +45,12 @@ export const Workflow = ({selectedWorkflowId, refetchWorkflows}) => {
         isVisible={extendWorkflowModalState?.isVisible}
         extendWorkflowModalState={extendWorkflowModalState}
         isLoading={isLoading}/>
+        <EditNodeModal
+          editNodeModalState={editNodeModalState}
+          handleClose={handleCloseEditNodeModal}
+          handleEdit={handleEditNode}
+          isLoading={isLoading}
+        ></EditNodeModal>
       </ReactFlowProvider>
     </div>
 
