@@ -11,11 +11,11 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: ${{secrets.SERVER_IP}}
-          username: ${{ssecrets.SERVER_USERNAME}}
-          password: ${{ssecrets.SERVER_PASSWORD}}
+          username: ${{secrets.SERVER_USERNAME}}
+          password: ${{secrets.SERVER_PASSWORD}}
           script_stop: true
           command_timeout: 200m
           script: /
             cd /home/apps/workflow-app
             git pull
-            docker-compose -f docker-compose-prod.yaml up -d
+            docker-compose -f docker-compose-prod.yaml up -d --build

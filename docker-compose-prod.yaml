@@ -4,9 +4,8 @@ services:
     image: "mongo"
     volumes:
       - data:/data/db
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME={{secrets.MONGODB_USERNAME}}
-      - MONGO_INITDB_ROOT_PASSWORD={{secrets.MONGODB_PASSWORD}}
+    env_file:
+      - ./mongo.env
     ports:
       - "27017:27017"
   backend:
@@ -16,9 +15,8 @@ services:
     volumes:
       - ./backend:/app 
       - /app/node_modules
-    environment:
-      - MONGODB_USERNAME={{secrets.MONGODB_USERNAME}}
-      - MONGODB_PASSWORD={{secrets.MONGODB_PASSWORD}}
+    env_file:
+      - ./backend/.env
     depends_on:
       - mongodb
     container_name: backend
