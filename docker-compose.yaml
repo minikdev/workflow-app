@@ -31,7 +31,7 @@ services:
     stdin_open: true # -it => input part
     tty: true # -it => terminal part
     env_file:
-      - ./frontend/.env
+      - ./frontend/dev.env
     depends_on:
       - backend
 volumes: 

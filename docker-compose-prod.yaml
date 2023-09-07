@@ -1,0 +1,26 @@
+version: "3.8"
+services:
+  mongodb:
+    image: "mongo"
+    volumes:
+      - data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME={{secrets.MONGODB_USERNAME}}
+      - MONGO_INITDB_ROOT_PASSWORD={{secrets.MONGODB_PASSWORD}}
+    ports:
+      - "27017:27017"
+  backend:
+    build: ./backend
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./backend:/app 
+      - /app/node_modules
+    environment:
+      - MONGODB_USERNAME={{secrets.MONGODB_USERNAME}}
+      - MONGODB_PASSWORD={{secrets.MONGODB_PASSWORD}}
+    depends_on:
+      - mongodb
+    container_name: backend
+volumes: 
+  data: 
