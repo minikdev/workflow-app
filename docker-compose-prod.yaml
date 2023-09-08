@@ -6,17 +6,16 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
-      - "443:443"
+      - "443:443" 
     volumes:
-      - web-root:/var/www/html
+      - ./backend:/var/www/html
       - ./nginx-conf:/etc/nginx/conf.d
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
-      - dhparam:/etc/ssl/certs
+      - dhparam:/etc/ssl/certs  
     depends_on:
       - backend
-    networks:
-      - app-network
+
   mongodb:
     image: "mongo"
     volumes:
@@ -25,8 +24,7 @@ services:
       - ./mongo.env
     ports:
       - "27017:27017"
-    networks:
-      - app-network
+
   backend:
     build: ./backend
     ports:
@@ -39,34 +37,24 @@ services:
     depends_on:
       - mongodb
     container_name: backend
-    networks:
-      - app-network
+
   certbot:
     image: certbot/certbot
     container_name: certbot
     volumes:
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
-      - web-root:/var/www/html
+      - ./backend:/var/www/html
     depends_on:
       - webserver
-    command: certonly --webroot --webroot-path=/var/www/html --email enginkaan6@gmail.com --agree-tos --no-eff-email --force-renewal -d workflowapp.online  -d www.workflowapp.online     
+    command: certonly --webroot --webroot-path=/var/www/html --email enginkaan6@gmail.com --agree-tos --no-eff-email --force-renewal -d workflowapp.store -d www.workflowapp.store   
 volumes:
-  data:
+  data: 
   certbot-etc:
   certbot-var:
-  web-root:
-    driver: local
-    driver_opts:
-      type: none
-      device: /home/apps/workflow-app/views
-      o: bind
   dhparam:
     driver: local
     driver_opts:
       type: none
       device: /home/apps/workflow-app/dhparam/
-      o: bind        
-networks:
-  app-network:
-    driver: bridge
+      o: bind
