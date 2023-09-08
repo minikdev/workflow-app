@@ -8,7 +8,9 @@ import { nodeRouter } from './routes/NodeRouter.js';
 import cors from 'cors';
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: "*",
+}));
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
