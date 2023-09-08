@@ -36,3 +36,6 @@ services:
       - backend
 volumes: 
   data: 
+networks:
+  default:
+    name: test-network
