@@ -25,6 +25,5 @@ volumes:
   data:
 networks:
   default:
-    external:
       name: test-network
 
