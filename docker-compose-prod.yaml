@@ -37,17 +37,17 @@ services:
     depends_on:
       - mongodb
     container_name: backend
-
-  certbot:
-    image: certbot/certbot
-    container_name: certbot
-    volumes:
-      - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencrypt
-      - ./backend:/var/www/html
-    depends_on:
-      - webserver
-    command: certonly --webroot --webroot-path=/var/www/html --email enginkaan6@gmail.com --agree-tos --no-eff-email --force-renewal -d workflowapp.store -d www.workflowapp.store   
+  ## renew certificate has limit 5 commenting out for now
+  # certbot:
+  #   image: certbot/certbot
+  #   container_name: certbot
+  #   volumes:
+  #     - certbot-etc:/etc/letsencrypt
+  #     - certbot-var:/var/lib/letsencrypt
+  #     - ./backend:/var/www/html
+  #   depends_on:
+  #     - webserver
+  #   command: certonly --webroot --webroot-path=/var/www/html --email enginkaan6@gmail.com --agree-tos --no-eff-email --force-renewal -d workflowapp.store -d www.workflowapp.store   
 volumes:
   data: 
   certbot-etc:
