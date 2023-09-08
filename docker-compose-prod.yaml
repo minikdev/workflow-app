@@ -6,13 +6,11 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
-      - "443:443"
     volumes:
       - web-root:/var/www/html
       - ./nginx-conf:/etc/nginx/conf.d
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
-      - dhparam:/etc/ssl/certs
     depends_on:
       - backend
   mongodb:
@@ -23,12 +21,10 @@ services:
       - ./mongo.env
     ports:
       - "27017:27017"
-  
   backend:
     build: ./backend
     ports:
       - "8080:8080"
-      
     volumes:
       - ./backend:/app 
       - /app/node_modules
@@ -37,7 +33,6 @@ services:
     depends_on:
       - mongodb
     container_name: backend
-  
   certbot:
     image: certbot/certbot
     container_name: certbot
@@ -47,8 +42,7 @@ services:
       - web-root:/var/www/html
     depends_on:
       - webserver
-    command: certonly --webroot --webroot-path=/var/www/html --email enginkaan6@gmail.com --agree-tos --no-eff-email --staging -d workflowapp.online  -d www.workflowapp.online
-   
+    command: certonly --webroot --webroot-path=/var/www/html --email enginkaan6@gmail.com --agree-tos --no-eff-email --staging -d workflowapp.online  -d www.workflowapp.online 
 volumes:
   data:
   certbot-etc:
@@ -57,11 +51,5 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/apps/workflow-app/
-      o: bind  
-  dhparam:
-    driver: local
-    driver_opts:
-      type: none
-      device: /home/apps/workflow-app/dhparam/
+      device: /home/apps/workflow-app/backend
       o: bind
