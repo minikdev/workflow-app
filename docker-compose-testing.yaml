@@ -22,4 +22,9 @@ services:
       - mongodb
     container_name: backend-test
 volumes: 
-  data: 
+  data:
+networks:
+  default:
+    external:
+      name: test-network
+
