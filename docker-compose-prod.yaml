@@ -42,7 +42,7 @@ services:
       - web-root:/var/www/html
     depends_on:
       - webserver
-    command: certonly --webroot --webroot-path=/var/www/html --email enginkaan6@gmail.com --agree-tos --no-eff-email --staging -d workflowapp.online  -d www.workflowapp.online 
+    command: certonly --webroot --webroot-path=/var/www/html --email enginkaan6@gmail.com --agree-tos --no-eff-email --force-renewal -d workflowapp.online  -d www.workflowapp.online     
 volumes:
   data:
   certbot-etc:
