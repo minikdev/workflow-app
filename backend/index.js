@@ -5,8 +5,10 @@ import bodyParser from 'body-parser';
 import { helloRouter } from './routes/HelloRouter.js';
 import { workflowRouter } from './routes/WorkflowRouter.js';
 import { nodeRouter } from './routes/NodeRouter.js';
+import cors from 'cors';
 const app = express();
 
+app.use(cors());
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
