@@ -20,7 +20,7 @@ jobs:
             cd /home/apps/workflow-app
             git pull
             docker-compose up -d
-            docker exec -it backend bash -c "npm run test"
+            docker exec backend npm run test
             docker-compose down
   deploy:
     runs-on: ubuntu-latest
